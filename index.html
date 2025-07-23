@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Auth System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome</h1>
+        <div id="form-container">
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form">
+                <h2>Login</h2>
+                <input type="text" id="login-identifier" placeholder="Username or Email" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button type="submit">Login</button>
+                <p class="switch-link">Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
+                <p class="switch-link"><a href="#" id="show-forgot">Forgot password?</a></p>
+                <div id="login-message" class="message"></div>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signup-form" class="auth-form" style="display:none;">
+                <h2>Sign Up</h2>
+                <input type="text" id="signup-username" placeholder="Username" required>
+                <input type="email" id="signup-email" placeholder="Email" required>
+                <input type="password" id="signup-password" placeholder="Password" required>
+                <button type="submit">Sign Up</button>
+                <p class="switch-link">Already have an account? <a href="#" id="show-login">Login</a></p>
+                <div id="signup-message" class="message"></div>
+            </form>
+
+            <!-- Email Verification Message -->
+            <div id="verify-message" class="message" style="display:none;"></div>
+
+            <!-- Forgot Password Form -->
+            <form id="forgot-form" class="auth-form" style="display:none;">
+                <h2>Forgot Password</h2>
+                <input type="email" id="forgot-email" placeholder="Email" required>
+                <button type="submit">Send Reset Link</button>
+                <p class="switch-link"><a href="#" id="show-login2">Back to Login</a></p>
+                <div id="forgot-message" class="message"></div>
+            </form>
+
+            <!-- Reset Password Form (migrated from reset.html, hidden by default) -->
+            <form id="reset-form" class="auth-form" style="display:none;">
+                <h2>Reset Password</h2>
+                <input type="password" id="reset-password" placeholder="New Password" required>
+                <input type="password" id="reset-password-confirm" placeholder="Re-enter New Password" required>
+                <button type="submit">Reset Password</button>
+                <div id="reset-message" class="message"></div>
+            </form>
+        </div>
+    </div>
+    <script>
+    // API URL configuration
+    const API_URL = 'http://localhost:3000';
+    const CLIENT_URL = 'http://localhost:3001';
+    </script>
+    <script src="script.js"></script>
+</body>
+</html> 
