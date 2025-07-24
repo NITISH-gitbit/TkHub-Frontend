@@ -72,6 +72,44 @@ if (signupForm) {
     };
 }
 
+// Add resend verification button logic
+function addResendVerificationButton(msgElem, email) {
+    // Remove existing button if any
+    let existingBtn = document.getElementById('resend-verification-btn');
+    if (existingBtn) existingBtn.remove();
+    const btn = document.createElement('button');
+    btn.id = 'resend-verification-btn';
+    btn.textContent = 'Resend Verification Email';
+    btn.style.marginLeft = '10px';
+    btn.onclick = async (e) => {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.textContent = 'Resending...';
+        try {
+            const res = await fetch(`${API_BASE}/resend-verification`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                msgElem.textContent = data.message;
+                msgElem.className = 'message success';
+            } else {
+                msgElem.textContent = data.message || 'Failed to resend verification email.';
+                msgElem.className = 'message';
+            }
+        } catch {
+            msgElem.textContent = 'Network error.';
+            msgElem.className = 'message';
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Resend Verification Email';
+        }
+    };
+    msgElem.appendChild(btn);
+}
+
 // Login
 const loginForm = document.getElementById('login-form');
 if (loginForm) {
@@ -81,11 +119,12 @@ if (loginForm) {
         const password = document.getElementById('login-password').value;
         const msg = document.getElementById('login-message');
         const submitBtn = loginForm.querySelector('button[type="submit"]');
-        
         msg.textContent = '';
         submitBtn.disabled = true;
         submitBtn.textContent = 'Logging in...';
-        
+        // Remove any existing resend button
+        let existingBtn = document.getElementById('resend-verification-btn');
+        if (existingBtn) existingBtn.remove();
         try {
             const res = await fetch(`${API_BASE}/login`, {
                 method: 'POST',
@@ -95,9 +134,7 @@ if (loginForm) {
                 },
                 body: JSON.stringify({ identifier, password })
             });
-            
             const data = await res.json();
-            
             if (res.ok) {
                 msg.textContent = data.message;
                 msg.className = 'message success';
@@ -105,6 +142,8 @@ if (loginForm) {
             } else if (res.status === 403 && data.message && data.message.toLowerCase().includes('verify')) {
                 msg.textContent = 'Please verify your account before logging in. Check your email for the verification link.';
                 msg.className = 'message';
+                // Add resend verification button
+                addResendVerificationButton(msg, identifier.includes('@') ? identifier : '');
             } else {
                 msg.textContent = data.message || 'Login failed. Please try again.';
                 msg.className = 'message';
